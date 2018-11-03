@@ -1,4 +1,6 @@
-
+function print(a){
+  console.log(a)
+}
 
 var w = 1280,
     h = 800;
@@ -14,7 +16,7 @@ var svg = d3.select("#body").append("svg:svg")
     .attr("width", w)
     .attr("height", h);
 
-d3.json("china.json", function(states) {
+d3.json("https://luyuliu.github.io/Drag-Map/china.json", function(states) {
   var nodes = [],
       links = [];
 
@@ -27,6 +29,7 @@ d3.json("china.json", function(states) {
     nodes.push(centroid);
   });
 
+  print(states)
   d3.geom.delaunay(nodes).forEach(function(d) {
     links.push(edge(d[0], d[1]));
     links.push(edge(d[1], d[2]));
