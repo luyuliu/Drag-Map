@@ -2,8 +2,8 @@ function print(a) {
   console.log(a)
 }
 
-var width = 1280,
-  height = 800;
+var width = $(window).width(),
+  height = $(window).height()-90;
 var centered = null;
 
 var projection = d3.geo.albersUsa()
@@ -25,39 +25,20 @@ var zoom = d3.behavior.zoom()
 var g = svg.append("g")
   .call(zoom);
 
-function clickHandler(d) {
-  d = d.feature;
-  var x, y, k;
-
-  if (d && centered !== d) {
-    var centroid = path.centroid(d);
-    x = centroid[0];
-    y = centroid[1];
-    k = 4;
-    centered = d;
-  } else {
-    x = width *2;
-    y = height *2;
-    k = 1;
-    centered = null;
-  }
-
+$("#extent-button").click(function () {
+  print("good")
+  x = width * 2;
+  y = height * 2;
+  k = 1;
+  centered = null;
   svg.transition()
     .duration(750)
-    .attr("transform", "translate(" + width*2  + "," + height*2   + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+    .attr("transform", "translate(" + width * 2 + "," + height * 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
     .style("stroke-width", 1.5 / k + "px");
-}
-
-function zoomHandler() {
-  projection.translate(d3.event.translate).scale(d3.event.scale);
-}
+})
 
 
 d3.json("https://luyuliu.github.io/Drag-Map/data/us.json", function (states) {
-
-
-
-
   var nodes = [],
     links = [];
   print(states)
@@ -100,6 +81,7 @@ d3.json("https://luyuliu.github.io/Drag-Map/data/us.json", function (states) {
     .attr("transform", function (d) { return "translate(" + -d.x + "," + -d.y + ")"; })
     .call(force.drag)
     .append("svg:path")
+    .attr("class", "")
     .attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
     .attr("d", function (d) { return path(d.feature); })
     .on("click", clickHandler);
@@ -127,3 +109,32 @@ function edge(a, b) {
   };
 }
 
+function clickHandler(d) {
+
+  d = d.feature;
+  var x, y, k;
+  g.selectAll("path")
+    .classed("active", centered && function (d) { return d === centered; });
+
+  if (d && centered !== d) {
+    var centroid = path.centroid(d);
+    x = centroid[0];
+    y = centroid[1];
+    k = 4;
+    centered = d;
+  } else {
+    x = width * 2;
+    y = height * 2;
+    k = 1;
+    centered = null;
+  }
+
+  svg.transition()
+    .duration(750)
+    .attr("transform", "translate(" + width * 2 + "," + height * 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+    .style("stroke-width", 1.5 / k + "px");
+}
+
+function zoomHandler() {
+  projection.translate(d3.event.translate).scale(d3.event.scale);
+}
