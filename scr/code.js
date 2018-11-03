@@ -12,14 +12,14 @@ var projection = d3.geo.albersUsa()
 var path = d3.geo.path().projection(projection),
     force = d3.layout.force().size([w, h]);
 
-var svg = d3.select("#body").append("svg:svg")
+var svg = d3.select("#container").append("svg:svg")
     .attr("width", w)
     .attr("height", h);
 
-d3.json("https://luyuliu.github.io/Drag-Map/china.json", function(states) {
+d3.json("https://luyuliu.github.io/Drag-Map/data/countries/united-states/higher-quality-5m/5m-US-congressional-districts-2015.json", function(states) {
   var nodes = [],
       links = [];
-
+  print(states)
   states.features.forEach(function(d, i) {
     if (d.id == "02" || d.id == "15" || d.id == "72") return; // lower 48
     var centroid = path.centroid(d);
@@ -29,7 +29,7 @@ d3.json("https://luyuliu.github.io/Drag-Map/china.json", function(states) {
     nodes.push(centroid);
   });
 
-  print(states)
+  
   d3.geom.delaunay(nodes).forEach(function(d) {
     links.push(edge(d[0], d[1]));
     links.push(edge(d[1], d[2]));
