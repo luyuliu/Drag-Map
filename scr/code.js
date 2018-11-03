@@ -7,7 +7,7 @@ var w = 1280,
 
 var projection = d3.geo.albersUsa()
     .scale(1200)
-    .translate([600, 400]);
+    .translate([0, 400]);
 
 var path = d3.geo.path().projection(projection),
     force = d3.layout.force().size([w, h]);
@@ -16,12 +16,16 @@ var svg = d3.select("#container").append("svg:svg")
     .attr("width", w)
     .attr("height", h);
 
-d3.json("https://luyuliu.github.io/Drag-Map/data/countries/united-states/higher-quality-5m/5m-US-congressional-districts-2015.json", function(states) {
+d3.json("https://luyuliu.github.io/Drag-Map/data/ohio.json", function(states) {
+  svg.transition()
+      .duration(750)
+      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+      .style("stroke-width", 1.5 / k + "px");
   var nodes = [],
       links = [];
   print(states)
   states.features.forEach(function(d, i) {
-    if (d.id == "02" || d.id == "15" || d.id == "72") return; // lower 48
+    //if (d.id == "02" || d.id == "15" || d.id == "72") return; // lower 48
     var centroid = path.centroid(d);
     centroid.x = centroid[0];
     centroid.y = centroid[1];
@@ -40,7 +44,9 @@ d3.json("https://luyuliu.github.io/Drag-Map/data/countries/united-states/higher-
       .gravity(0)
       .nodes(nodes)
       .links(links)
-      .linkDistance(function(d) { return d.distance; })
+      .linkDistance(function(d) { 
+        print(d)
+        return d.distance; })
       .start();
 
   var link = svg.selectAll("line")
