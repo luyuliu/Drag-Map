@@ -1,7 +1,9 @@
 function __init_state__(id) {
-
-    d3.json("https://luyuliu.github.io/Drag-Map/data/ohio.json", function (states) {
-
+    print("https://luyuliu.github.io/Drag-Map/data/states/jsoncounties-"+id+".min.js")
+    d3.json("https://luyuliu.github.io/Drag-Map/data/states/jsoncounties-"+id+".min.js", function (states) {
+    
+        //states.features=[]
+        states.features=states.features.counties;
         width = $(window).width() / 3 * 2,
             height = $(window).height() - 90;
 
@@ -15,29 +17,26 @@ function __init_state__(id) {
 
             var center = d3.geo.centroid(states)
         var projection = d3.geo.mercator()
-            .scale(10000)
+            .scale(5000)
             .center(center)
             //.translate([-width * 3 / 2, height]);
 
-        print([-width * 3 / 2, height])
         path = d3.geo.path().projection(projection);
 
         var nodes = [],
             links = [];
-        print(states)
         states.features.forEach(function (d, i) {
-            if (d.id == "02" || d.id == "15" || d.id == "72") return; // lower 48
+            d.type="Feature"
             var centroid = path.centroid(d);
             centroid.x = centroid[0];
             centroid.y = centroid[1];
-
-            print({ centroid })
             centroid.feature = d;
+            print(centroid)
             nodes.push(centroid);
         });
 
 
-
+        print(states)
 
 
 
@@ -47,7 +46,7 @@ function __init_state__(id) {
             links.push(edge(d[2], d[0]));
         });
 
-        var force = d3.layout.force().size([width / 100, height / 100]);
+        var force = d3.layout.force().size([width, height]);
 
         force
             .gravity(0)
@@ -109,7 +108,7 @@ function __del_state__() {
 
     setTimeout(function () {
         $("svg").remove();
-        print("deleted")
+        
     }, 750);
 
 }

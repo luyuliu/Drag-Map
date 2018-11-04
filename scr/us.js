@@ -3,15 +3,15 @@
 function __init__() {
   d3.json("https://luyuliu.github.io/Drag-Map/data/us.json", function (states) {
     svg = d3.select("#plot-container").append("svg:svg")
-            .attr("width", width)
-            .attr("height", height);
+      .attr("width", width)
+      .attr("height", height);
     var projection = d3.geo.albersUsa()
-    .scale(1070)
-    .translate([width / 2, height / 2]);
+      .scale(1070)
+      .translate([width / 2, height / 2]);
 
-path = d3.geo.path().projection(projection);
+    path = d3.geo.path().projection(projection);
     width = $(window).width() / 3 * 2,
-    height = $(window).height() - 90;
+      height = $(window).height() - 90;
     g = svg.append("g")
       .attr("id", "us-plot")
 
@@ -49,7 +49,7 @@ path = d3.geo.path().projection(projection);
     var link = g.selectAll("line")
       .data(links)
       .enter().append("svg:line")
-      .attr("class","us-line")
+      .attr("class", "us-line")
       .attr("x1", function (d) { return d.source.x; })
       .attr("y1", function (d) { return d.source.y; })
       .attr("x2", function (d) { return d.target.x; })
@@ -58,18 +58,21 @@ path = d3.geo.path().projection(projection);
     var node = g.selectAll("g")
       .data(nodes)
       .enter().append("svg:g")
-      
-      .attr("class","us-g")
+
+      .attr("class", "us-g")
       .attr("transform", function (d) { return "translate(" + -d.x + "," + -d.y + ")"; })
       .call(force.drag)
       .append("svg:path")
-      .attr("class","us-shape")
+      .attr("class", "us-shape")
       .attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
-      
+
       .attr("d", function (d) { return path(d.feature); })
-      
+
       .on("drag", dragHandler)
       .on("dblclick", clickHandler)
+      .on("click", function (d, i) {
+        print(d.feature.properties.name)
+      })
 
 
     force.on("tick", function (e) {
@@ -101,9 +104,8 @@ function __del__() {
     .style("fill-opacity", 0)
     .style("stroke-opacity", 0)
 
-    setTimeout(function(){
+  setTimeout(function () {
     $("svg").remove();
-    print("deleted")
   }, 750);
 }
 
@@ -120,8 +122,8 @@ function edge(a, b) {
   };
 }
 
-function clickHandler(d, i ,a) {
-  print({d, i ,a})
+function clickHandler(d, i, a) {
+  var stateID = statesDic[d.feature.properties.name];
   d = d.feature;
   var x, y, k;
   g.selectAll("path")
@@ -151,7 +153,7 @@ function clickHandler(d, i ,a) {
     __del__();
   }, 350);
   setTimeout(function () {
-    __init_state__(34);
+    __init_state__(stateID);
   }, 1500);
 }
 
@@ -159,8 +161,7 @@ function zoomHandler() {
   projection.translate(d3.event.translate).scale(d3.event.scale);
 }
 
-function dragHandler(){
-print("yes?")
+function dragHandler() {
 }
 
 
