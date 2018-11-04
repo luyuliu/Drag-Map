@@ -1,6 +1,6 @@
 
 var width = $(window).width() / 3 * 2,
-    height = $(window).height() - 90;
+    height = $(window).height()-150;
 var centered = null;
 
 var statesDic ={

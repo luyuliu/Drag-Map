@@ -72,6 +72,7 @@ function __init__() {
       .on("dblclick", clickHandler)
       .on("click", function (d, i) {
         print(d.feature.properties.name)
+        $("#tag").html(d.feature.properties.name)
       })
 
 

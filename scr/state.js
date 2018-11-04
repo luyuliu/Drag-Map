@@ -31,7 +31,6 @@ function __init_state__(id) {
             centroid.x = centroid[0];
             centroid.y = centroid[1];
             centroid.feature = d;
-            print(centroid)
             nodes.push(centroid);
         });
 
@@ -75,6 +74,9 @@ function __init_state__(id) {
             .attr("class", "state-shape")
             .attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
             .attr("d", function (d) { return path(d.feature); })
+            .on("click", function (d, i) {
+                $("#tag").html(d.feature.geographicRegion)
+              })
 
 
         force.on("tick", function (e) {
