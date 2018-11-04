@@ -1,5 +1,5 @@
 
-#container {
+.container {
     overflow: hidden;
 }
 
@@ -7,7 +7,6 @@ path {
   fill: #aaa;
   fill-opacity: .8;
   stroke: #fff;
-  stroke-width: 1.5px;
 }
 path .active {
   fill: orange;
